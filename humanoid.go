@@ -42,7 +42,7 @@ func (chel *Persone) Sleep() {
 }
 
 func (chel *Persone) Work(){
-	chel.Health -= 50
+	chel.Health -= 30
 	chel.Wallet += chel.WorkDay
 }
 
@@ -50,21 +50,31 @@ func (chel *Persone)  Pay(){
 	if chel.Wallet >= chel.Cost {
 		chel.Wallet -= chel.Cost
 		chel.IceBox += 4
+		chel.Health -= 10
 	}
 }
 
 func do(p PersoneDo,a *Persone) {
 	damage := 0.0
+	days := 0
 	i := float64(a.Age)
 	for a.Health > 0{
-		p.Olding()
-		i += 1
+		days += 1
+		if days > 360 {
+			p.Olding()
+			days = 0
+			i += 1
+		}
+		//		p.Olding()
 		damage = math.Pow(0.04, -i / 100)
 		a.Health -= int(damage)
 		if a.Health <= 0{
 			break
 		}
 		p.Eat()
+		if a.Health > 100{
+			a.Health = 100
+		}
 		p.Work()
 		if a.Health <= 0{
 			break
@@ -74,8 +84,14 @@ func do(p PersoneDo,a *Persone) {
 			break
 		}
 		p.Eat()
+		if a.Health > 100{
+			a.Health = 100
+		}
 		p.Sleep()
-		fmt.Println(a.Age)
+		if a.Health > 100{
+			a.Health = 100
+		}
+		fmt.Println()
 	}
 }
 
